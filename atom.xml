@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-07-07T08:42:13.000Z</updated>
+  <updated>2017-07-07T10:14:34.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,48 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Live555代码学习</title>
+    <link href="http://yoursite.com/2017/07/07/Live555%E4%BB%A3%E7%A0%81%E5%AD%A6%E4%B9%A0/"/>
+    <id>http://yoursite.com/2017/07/07/Live555代码学习/</id>
+    <published>2017-07-07T10:12:04.000Z</published>
+    <updated>2017-07-07T10:14:34.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="主要处理流程"><a href="#主要处理流程" class="headerlink" title="主要处理流程"></a>主要处理流程</h2><h4 id="2-1-RTSP服务端建立过程"><a href="#2-1-RTSP服务端建立过程" class="headerlink" title="2.1 RTSP服务端建立过程"></a>2.1 RTSP服务端建立过程</h4><ul>
+<li>框架首先在554端口上建立socket，并进入侦听状态。</li>
+<li>设置socket的参数，如：SigPipe、NoBlocking、RecvBuffer</li>
+<li>注册该socket的读事件及对应处理函数到TaskScheduler，使用双端队列存储socket的编号、处理函数、参数等</li>
+<li>等待客户端的连接</li>
+</ul>
+<h4 id="2-2-增加媒体流"><a href="#2-2-增加媒体流" class="headerlink" title="2.2 增加媒体流"></a>2.2 增加媒体流</h4><ul>
+<li>当无任何媒体流时，客户端发出的Describe命令，开始尝试建立媒体流</li>
+<li></li>
+</ul>
+<h4 id="2-3-有新的客户端连接时"><a href="#2-3-有新的客户端连接时" class="headerlink" title="2.3 有新的客户端连接时"></a>2.3 有新的客户端连接时</h4><ul>
+<li>在2.3中建立的socket侦听到一个新的客户端连接时，accept出新socket连接</li>
+<li>设置新连接的socket的选项：ignoreSigPipe、NonBlocking、IncreaseSendBuffer</li>
+<li>调用RTSPServer::createNewClientConnection创建一个对应的客户端连接RTSPClientConnection，把连接加到GenericMediaServer的fClientSessions表中</li>
+<li>把新连接（ClientConnection）的Socket、读和异常事件及对应的处理函数注册到TaskScheduler</li>
+</ul>
+<h4 id="2-4-客户端连接建立后，RTSP处理过程"><a href="#2-4-客户端连接建立后，RTSP处理过程" class="headerlink" title="2.4 客户端连接建立后，RTSP处理过程"></a>2.4 客户端连接建立后，RTSP处理过程</h4><ul>
+<li>收到有数据可读的事件时，将收到的数据写入缓冲区中</li>
+<li>调用RTSPClientConnection::handleRequestBytes</li>
+<li>调用parseRTSPRequestString，解析收到的数据包，根据不同的命令生成所需的回复包，通过socket发给对端</li>
+<li>收到Options命令，通知对端本媒体服务器支持的命令列表</li>
+<li>收到Describe命令，鉴权成功后，在fServerMediaSessions中查找并创建对应的媒体流（见2.2），生成回复信息（包括SDP信息、url等）</li>
+<li>todo : Setup命令？？ </li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;主要处理流程&quot;&gt;&lt;a href=&quot;#主要处理流程&quot; class=&quot;headerlink&quot; title=&quot;主要处理流程&quot;&gt;&lt;/a&gt;主要处理流程&lt;/h2&gt;&lt;h4 id=&quot;2-1-RTSP服务端建立过程&quot;&gt;&lt;a href=&quot;#2-1-RTSP服务端建立过程&quot; class
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Hello World</title>
